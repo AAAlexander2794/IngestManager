@@ -1,0 +1,27 @@
+﻿<Window x:Class="IngestManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IngestManager" xmlns:entities="clr-namespace:IngestManager.Entities"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=entities:Model}"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ListBox Name="ordersListBox" Margin="10,48,419,48" ItemsSource="{Binding Orders}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Id}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="400,48,0,0" VerticalAlignment="Top" Height="32" Width="72" Click="Button_Click"/>
+        <TextBox HorizontalAlignment="Left" Margin="400,99,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"
+                 Name="myTextBox"/>
+        <TextBlock HorizontalAlignment="Left" Margin="400,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="79" Width="390"
+                   Text="{Binding ElementName=myTextBox, Path=Text}"/>
+
+    </Grid>
+</Window>
