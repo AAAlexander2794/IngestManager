@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using IngestManager.Entities;
+using IngestManager.Models.Telegram;
 
 namespace IngestManager
 {
@@ -34,6 +35,7 @@ namespace IngestManager
         {
             var order = new Order();
             localModel.Orders.Add(order);
+            var some = Config.ConfigInfo;
         }
     }
 }
