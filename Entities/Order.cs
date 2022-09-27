@@ -30,9 +30,14 @@ namespace IngestManager.Entities
         public string Name { get; }
 
         /// <summary>
-        /// Клиент, то есть тот, кто делает заказ
+        /// Имя клиента, то есть тот, кто делает заказ
         /// </summary>
-        public string Client { get; }
+        public string ClientName { get; }
+
+        /// <summary>
+        /// Идентификатор клиента (запланирован как Id чата в Телеграме)
+        /// </summary>
+        public long ClientId { get; }
 
         /// <summary>
         /// Дополнительное описание от клиента, если требуются пояснения по заказу
@@ -61,14 +66,26 @@ namespace IngestManager.Entities
         public string? FilePath { get; set; }
 
         /// <summary>
-        /// Конструктор по умолчанию
+        /// Конструктор по умолчанию (по хорошему следует удалить)
         /// </summary>
         public Order()
         {
             Hash = Guid.NewGuid().ToString();
+            Status = OrderStatus.Получен;
+            Created = DateTime.Now;
+            //
             Name = "";
-            Client = "Unknown";
+            ClientName = "Unknown";
             Description = "";
+        }
+
+        public Order(string name, string clientName, long clientId, string description)
+        {
+            Hash = Guid.NewGuid().ToString();
+            Name = name;
+            ClientName = clientName;
+            ClientId = clientId;
+            Description = description;
             Status = OrderStatus.Получен;
             Created = DateTime.Now;
         }

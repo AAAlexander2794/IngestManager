@@ -6,9 +6,13 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using IngestManager.Entities;
 
-namespace IngestManager.Entities
+namespace IngestManager
 {
+    /// <summary>
+    /// 
+    /// </summary>
     class Model : INotifyPropertyChanged
     {
         /// <summary>

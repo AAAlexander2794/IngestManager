@@ -8,10 +8,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace IngestManager.Models.Telegram
+namespace IngestManager.Models.TelegramBot
 {
-    internal class Config
+    /// <summary>
+    /// Читает файл конфигурации для Телеграма, хранит в себе настройки
+    /// </summary>
+    internal static class Config
     {
+        /// <summary>
+        /// Хранит настройки, непосредственно считанные с файла
+        /// </summary>
         public static ConfigInfo ConfigInfo { get; }
 
         static string FileName { get; } = "TelegramConfig.xml";
@@ -33,7 +39,6 @@ namespace IngestManager.Models.Telegram
                 //
                 ConfigInfo = configInfo;
                 file.Close();
-                MessageBox.Show(ConfigInfo.Hash);
             }
             catch (Exception ex)
             {

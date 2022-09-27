@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using IngestManager.Entities;
-using IngestManager.Models.Telegram;
+using IngestManager.Models.TelegramBot;
 
 namespace IngestManager
 {
@@ -22,20 +22,18 @@ namespace IngestManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        Model localModel { get; set; }
+        ViewModel ViewModel { get; } = new ViewModel();
 
         public MainWindow()
         {
             InitializeComponent();
-            localModel = new Model();
-            DataContext = localModel;
+            DataContext = ViewModel;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            var order = new Order();
-            localModel.Orders.Add(order);
-            var some = Config.ConfigInfo;
+            ViewModel.CreateEmptyOrder();
+            //await ViewModel.Message();
         }
     }
 }

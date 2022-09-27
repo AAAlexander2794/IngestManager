@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IngestManager" xmlns:entities="clr-namespace:IngestManager.Entities"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=entities:Model}"
+        d:DataContext="{d:DesignInstance Type=local:ViewModel}"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <ListBox Name="ordersListBox" Margin="10,48,419,48" ItemsSource="{Binding Orders}">
+        <ListBox Name="ordersListBox" Margin="10,48,419,48" ItemsSource="{Binding Model.Orders}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Id}"/>
+                        <TextBlock Text="{Binding Hash}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
