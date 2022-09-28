@@ -16,7 +16,7 @@ namespace IngestManager.Models.TelegramBot
     {
         static ITelegramBotClient Bot = new TelegramBotClient(Config.ConfigInfo.Hash);
 
-        public delegate Task EventHandler(object sender, EventArgs args);
+        public delegate Task EventHandler(object? sender, EventArgs args);
         public static event EventHandler? MessageRecived;
 
         /// <summary>
@@ -40,25 +40,39 @@ namespace IngestManager.Models.TelegramBot
 
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
+            // Обработка именно сообщений
             if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
             {
                 var message = update.Message;
-                if (message == null) return;
-
+                if (message == null || message.Text == null) return;
+                // Начальное приветствие
                 if (message.Text.ToLower() == "/start")
                 {
-                    await botClient.SendTextMessageAsync(message.Chat, "Добро пожаловать на борт, добрый путник!");
+                    await botClient.SendTextMessageAsync(message.Chat, "Вы подключены к боту Инжеста.");
                     return;
                 }
-                await botClient.SendTextMessageAsync(message.Chat, "Привет-привет!! " + message.Chat.Id);
-                MessageRecived?.Invoke(null, EventArgs.Empty);
+                // Аргументы для соб
+                var telegramEventArgs = new TelegramEventArgs(message);
+                //
+                await botClient.SendTextMessageAsync(message.Chat, "Сообщение получено, запрос обрабатывается.");
+                // Объект не отправляем, так как sender не экземпляр - он статический
+                MessageRecived?.Invoke(null, telegramEventArgs);
             }
         }
 
-        public static async Task SendMessage()
+        public static async Task SendMessageAsync(long chatId, string message)
         {
-            // Отправка сообщения админу
-            await Bot.SendTextMessageAsync(Config.ConfigInfo.AdminChatId, "Отправка админу");
+            _ = await Bot.SendTextMessageAsync(chatId, message);
+        }
+
+        /// <summary>
+        /// Отправка сообщения админу бота
+        /// </summary>
+        /// <returns></returns>
+        public static async Task SendMessageToAdminAsync(string message)
+        {
+            // Оператор удаления, чтобы не дожидаться отправки сообщения
+            _ = await Bot.SendTextMessageAsync(Config.ConfigInfo.AdminChatId, message);
         }
 
         public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)

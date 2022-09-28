@@ -9,7 +9,7 @@ namespace IngestManager.Models
     /// <summary>
     /// Статус заказа
     /// </summary>
-    enum OrderStatus
+    public enum OrderStatus
     {
         Получен,
         Обрабатывается,

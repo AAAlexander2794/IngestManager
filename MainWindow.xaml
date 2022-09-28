@@ -7,21 +7,50 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:ViewModel}"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="_ListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Name="_Border"
+                                Padding="2"
+                                SnapsToDevicePixels="true">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="true">
+                                <Setter TargetName="_Border" Property="Background" Value="Yellow"/>
+                                <Setter Property="Foreground" Value="Red"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <ListBox Name="ordersListBox" Margin="10,48,419,48" ItemsSource="{Binding Model.Orders}">
+        <ListBox Name="ordersListBox" Margin="10,48,419,48" ItemsSource="{Binding Model.Orders}" SelectedItem="{Binding Model.CurrentOrder}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Hash}"/>
+                        <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="400,48,0,0" VerticalAlignment="Top" Height="32" Width="72" Click="Button_Click"/>
-        <TextBox HorizontalAlignment="Left" Margin="400,99,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"
-                 Name="myTextBox"/>
-        <TextBlock HorizontalAlignment="Left" Margin="400,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="79" Width="390"
-                   Text="{Binding ElementName=myTextBox, Path=Text}"/>
+        <Button Content="new empty order" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" Width="109" Click="Button_Click"/>
+        <Button Content="Закрыть заказ" HorizontalAlignment="Left" Margin="400,48,0,0" VerticalAlignment="Top" Height="32" Width="112" Click="Button_Click_1"/>
+        <Button Content="Вернуть заказ в обработку" HorizontalAlignment="Left" Margin="525,48,0,0" VerticalAlignment="Top" Height="32" Width="176" Click="Button_Click_2"/>
+        <StackPanel Margin="400,217,45,50" DataContext="{Binding Model.CurrentOrder }">
+            <Label Content="Сведения о заказе:" HorizontalAlignment="Center"/>
+            <TextBlock TextWrapping="Wrap" Height="21" Width="352" Text="{Binding Hash}"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding Name}" Height="22"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding ClientId}" Height="22"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding Status}" Height="22"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding Description}" Height="22"/>
+        </StackPanel>
+        
+        <TextBlock Name="Footer" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>

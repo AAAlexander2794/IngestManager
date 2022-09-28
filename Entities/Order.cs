@@ -12,7 +12,7 @@ namespace IngestManager.Entities
     /// <summary>
     /// Заказ, здесь вся информация о том, кто и что хочет получить от Инжеста
     /// </summary>
-    internal class Order : INotifyPropertyChanged
+    public class Order : INotifyPropertyChanged
     {
         /// <summary>
         /// Некоторый идентификатор (уникальный или нет?)
@@ -37,17 +37,26 @@ namespace IngestManager.Entities
         /// <summary>
         /// Идентификатор клиента (запланирован как Id чата в Телеграме)
         /// </summary>
-        public long ClientId { get; }
+        public long? ClientId { get; }
 
         /// <summary>
         /// Дополнительное описание от клиента, если требуются пояснения по заказу
         /// </summary>
         public string Description { get; }
 
+        private OrderStatus _status;
         /// <summary>
         /// Статус заказа
         /// </summary>
-        public OrderStatus Status { get; set; }
+        public OrderStatus Status 
+        { 
+            get => _status; 
+            set 
+            {
+                _status = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Время создания заказа
@@ -74,11 +83,18 @@ namespace IngestManager.Entities
             Status = OrderStatus.Получен;
             Created = DateTime.Now;
             //
-            Name = "";
+            Name = "Empty name " + Created;
             ClientName = "Unknown";
             Description = "";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name">Название заказа</param>
+        /// <param name="clientName">Название заказчика</param>
+        /// <param name="clientId">Идентификатор заказчика</param>
+        /// <param name="description">Описание заказа</param>
         public Order(string name, string clientName, long clientId, string description)
         {
             Hash = Guid.NewGuid().ToString();

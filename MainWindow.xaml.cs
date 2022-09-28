@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,16 @@ namespace IngestManager
         {
             ViewModel.CreateEmptyOrder();
             //await ViewModel.Message();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CompleteOrderAsync(ViewModel.Model.CurrentOrder);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Model.CurrentOrder.Status = Models.OrderStatus.Обрабатывается;
         }
     }
 }

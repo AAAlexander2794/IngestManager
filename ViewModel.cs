@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Telegram.Bot.Types;
 
 namespace IngestManager
@@ -13,19 +14,14 @@ namespace IngestManager
     internal class ViewModel
     {
         /// <summary>
-        /// Здесь хранится все главные данные
+        /// Здесь хранятся все главные данные
         /// </summary>
         public Model Model { get; } = new();
 
         public ViewModel()
         {
             TelegramBot.StartBot();
-            TelegramBot.MessageRecived += Message;
-        }
-
-        public void AddOrder(Order order)
-        {
-            Model.Orders.Add(order);
+            TelegramBot.MessageRecived += CreateOrderAsync;
         }
 
         /// <summary>
@@ -33,16 +29,27 @@ namespace IngestManager
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        static Order CreateOrder(Message message)
+        async Task CreateOrderAsync(object? sender, EventArgs args)
         {
-            var name = "Заказ от " + message.SenderChat.FirstName + " " + message.SenderChat.LastName;
-            var clientName = message.SenderChat.FirstName + " " + message.SenderChat.LastName;
+            var message = ((TelegramEventArgs)args).Message;
+            var name = "Заказ от " + message.From.FirstName + " " + message.From.LastName;
+            var clientName = message.From.FirstName + " " + message.From.LastName;
             var clientId = message.Chat.Id;
             var description = message.Text;
             //
             var order = new Order(name, clientName, clientId, description);
+            Model.AddOrder(order);
+            await TelegramBot.SendMessageAsync(clientId, "Ваш заказ добавлен в очередь");
+        }
 
-            return order;
+        public async Task CompleteOrderAsync(Order order)
+        {
+            order.Status = Models.OrderStatus.Выполнен;
+            if (order.ClientId != null)
+            {
+                await TelegramBot.SendMessageAsync((long)order.ClientId, "Ваш заказ исполнен");
+                //MessageBox.Show(order.ClientName + " done");
+            }
         }
 
         /// <summary>
@@ -51,17 +58,8 @@ namespace IngestManager
         public void CreateEmptyOrder()
         {
             var order = new Order();
-            AddOrder(order);
+            Model.AddOrder(order);
         }
 
-        public async Task Message()
-        {
-            await TelegramBot.SendMessage();
-        }
-
-        public async Task Message(object sender, EventArgs args)
-        {
-            await TelegramBot.SendMessage();
-        }
     }
 }
