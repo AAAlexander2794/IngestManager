@@ -16,12 +16,21 @@ namespace IngestManager
         /// <summary>
         /// Здесь хранятся все главные данные
         /// </summary>
-        public Model Model { get; } = new();
+        public Model.Database Model { get; } = new();
 
         public ViewModel()
         {
-            TelegramBot.StartBot();
-            TelegramBot.MessageRecived += CreateOrderAsync;
+            try
+            {
+                TelegramBot.StartBot();
+                TelegramBot.MessageRecived += CreateOrderAsync;
+                TelegramBot.SendMessageWithButtonsAsync(Config.ConfigInfo.AdminChatId);
+            }
+            catch
+            {
+                MessageBox.Show("Не удалось подключиться к боту. Программа закроется");
+                Environment.Exit(0);
+            }
         }
 
         /// <summary>

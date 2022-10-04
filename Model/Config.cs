@@ -7,11 +7,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using IngestManager.Entities;
 
 namespace IngestManager.Models.TelegramBot
 {
     /// <summary>
-    /// Читает файл конфигурации для Телеграма, хранит в себе настройки
+    /// Читает файл конфигурации, хранит в себе настройки
     /// </summary>
     internal static class Config
     {
@@ -20,8 +21,14 @@ namespace IngestManager.Models.TelegramBot
         /// </summary>
         public static ConfigInfo ConfigInfo { get; }
 
+        /// <summary>
+        /// Название файла конфигурации
+        /// </summary>
         static string FileName { get; } = "TelegramConfig.xml";
 
+        /// <summary>
+        /// Читает файл конфигурации, если возникает ошибка, пересоздает новый, сообщает, закрывает программу.
+        /// </summary>
         static Config()
         {
             try
@@ -43,7 +50,7 @@ namespace IngestManager.Models.TelegramBot
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                //
+                // Создает пустой файл конфигурации (с данными-заглушкой)
                 ConfigInfo = new ConfigInfo();
                 WriteConfig(ConfigInfo, FileName);
                 MessageBox.Show("Файл " + FileName + " создан. Заполните его данными и перезапустите программу.");

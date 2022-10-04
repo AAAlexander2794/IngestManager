@@ -44,6 +44,11 @@ namespace IngestManager.Entities
         /// </summary>
         public string Description { get; }
 
+        /// <summary>
+        /// Время создания заказа
+        /// </summary>
+        public DateTime Created { get; }
+
         private OrderStatus _status;
         /// <summary>
         /// Статус заказа
@@ -57,11 +62,6 @@ namespace IngestManager.Entities
                 OnPropertyChanged();
             }
         }
-
-        /// <summary>
-        /// Время создания заказа
-        /// </summary>
-        public DateTime Created { get; }
 
         public DateTime? Updated { get; set; }
 

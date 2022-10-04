@@ -8,12 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using IngestManager.Entities;
 
-namespace IngestManager
+namespace IngestManager.Model
 {
     /// <summary>
-    /// 
+    /// База данных модели.
     /// </summary>
-    class Model : INotifyPropertyChanged
+    /// <remarks>
+    /// Хранит данные, с которыми работает приложение.
+    /// </remarks>
+    class Database : INotifyPropertyChanged
     {
         /// <summary>
         /// Список заказов
@@ -35,7 +38,7 @@ namespace IngestManager
         }
 
         /// <summary>
-        /// Добавляет <see cref="Order"/> в <see cref="Orders"/>.
+        /// Добавляет заказ (<see cref="Order"/>) в заказы (<see cref="Orders"/>).
         /// </summary>
         /// <param name="order"></param>
         /// <remarks>
@@ -44,7 +47,7 @@ namespace IngestManager
         /// </remarks>
         public void AddOrder(Order order)
         {
-            App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(delegate ()
             {
                 Orders.Add(order);
             });
