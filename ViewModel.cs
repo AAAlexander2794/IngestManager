@@ -1,5 +1,6 @@
 ﻿using IngestManager.Entities;
-using IngestManager.Models.TelegramBot;
+using IngestManager.Models;
+using IngestManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,15 +17,20 @@ namespace IngestManager
         /// <summary>
         /// Здесь хранятся все главные данные
         /// </summary>
-        public Model.Database Model { get; } = new();
+        public Database Database { get; }
+
+        public Controller Controller { get; }
 
         public ViewModel()
         {
+            // Создаем основные сущности
+            Database = new Database();
+            Controller = new Controller(Database);
+            //
             try
             {
                 TelegramBot.StartBot();
-                TelegramBot.MessageRecived += CreateOrderAsync;
-                TelegramBot.SendMessageWithButtonsAsync(Config.ConfigInfo.AdminChatId);
+                //Controller.SendOrderToOperatorAsync(new Order());
             }
             catch
             {
@@ -33,33 +39,17 @@ namespace IngestManager
             }
         }
 
-        /// <summary>
-        /// Формирование заказа
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        async Task CreateOrderAsync(object? sender, EventArgs args)
-        {
-            var message = ((TelegramEventArgs)args).Message;
-            var name = "Заказ от " + message.From.FirstName + " " + message.From.LastName;
-            var clientName = message.From.FirstName + " " + message.From.LastName;
-            var clientId = message.Chat.Id;
-            var description = message.Text;
-            //
-            var order = new Order(name, clientName, clientId, description);
-            Model.AddOrder(order);
-            await TelegramBot.SendMessageAsync(clientId, "Ваш заказ добавлен в очередь");
-        }
+        
 
-        public async Task CompleteOrderAsync(Order order)
-        {
-            order.Status = Models.OrderStatus.Выполнен;
-            if (order.ClientId != null)
-            {
-                await TelegramBot.SendMessageAsync((long)order.ClientId, "Ваш заказ исполнен");
-                //MessageBox.Show(order.ClientName + " done");
-            }
-        }
+        //public async Task CompleteOrderAsync(Order order)
+        //{
+        //    order.Status = Models.OrderStatus.Выполнен;
+        //    if (order.ClientChatId != null)
+        //    {
+        //        await TelegramBot.SendMessageAsync((long)order.ClientChatId, "Ваш заказ исполнен");
+        //        //MessageBox.Show(order.ClientName + " done");
+        //    }
+        //}
 
         /// <summary>
         /// Тестовый метод
@@ -67,7 +57,7 @@ namespace IngestManager
         public void CreateEmptyOrder()
         {
             var order = new Order();
-            Model.AddOrder(order);
+            Database.AddOrder(order);
         }
 
     }

@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using IngestManager.Entities;
-using IngestManager.Models.TelegramBot;
+using IngestManager.Models;
 
 namespace IngestManager
 {
@@ -39,12 +39,12 @@ namespace IngestManager
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            ViewModel.CompleteOrderAsync(ViewModel.Model.CurrentOrder);
+            //ViewModel.CompleteOrderAsync(ViewModel.Database.CurrentOrder);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            ViewModel.Model.CurrentOrder.Status = Models.OrderStatus.Обрабатывается;
+            //ViewModel.Database.CurrentOrder.Status = Models.OrderStatus.Обрабатывается;
         }
     }
 }

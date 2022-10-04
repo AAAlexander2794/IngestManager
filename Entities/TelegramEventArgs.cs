@@ -15,11 +15,11 @@ namespace IngestManager.Entities
     /// 
     internal class TelegramEventArgs : EventArgs
     {
-        public Message Message { get; set; }
+        public Update Update { get; set; }
 
-        public TelegramEventArgs(Message message)
+        public TelegramEventArgs(Update update)
         {
-            Message = message;
+            Update = update;
         }
     }
 }

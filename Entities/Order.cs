@@ -37,7 +37,17 @@ namespace IngestManager.Entities
         /// <summary>
         /// Идентификатор клиента (запланирован как Id чата в Телеграме)
         /// </summary>
-        public long? ClientId { get; }
+        public long ClientChatId { get; }
+
+        /// <summary>
+        /// Id сообщения от клиента, в котором была отправлена информация о заказе
+        /// </summary>
+        public long ClientMessageId { get; set; }
+
+        /// <summary>
+        /// Id сообщения у оператора, в котором была отправлена информация о заказе
+        /// </summary>
+        public long OperatorMessageId { get; set; }
 
         /// <summary>
         /// Дополнительное описание от клиента, если требуются пояснения по заказу
@@ -86,6 +96,7 @@ namespace IngestManager.Entities
             Name = "Empty name " + Created;
             ClientName = "Unknown";
             Description = "";
+            ClientChatId = Config.ConfigInfo.AdminChatId;
         }
 
         /// <summary>
@@ -93,14 +104,14 @@ namespace IngestManager.Entities
         /// </summary>
         /// <param name="name">Название заказа</param>
         /// <param name="clientName">Название заказчика</param>
-        /// <param name="clientId">Идентификатор заказчика</param>
+        /// <param name="clientChatId">Идентификатор заказчика</param>
         /// <param name="description">Описание заказа</param>
-        public Order(string name, string clientName, long clientId, string description)
+        public Order(string name, string clientName, long clientChatId, string description)
         {
             Hash = Guid.NewGuid().ToString();
             Name = name;
             ClientName = clientName;
-            ClientId = clientId;
+            ClientChatId = clientChatId;
             Description = description;
             Status = OrderStatus.Получен;
             Created = DateTime.Now;

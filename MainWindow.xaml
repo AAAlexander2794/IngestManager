@@ -29,7 +29,7 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <ListBox Name="ordersListBox" Margin="10,48,419,48" ItemsSource="{Binding Model.Orders}" SelectedItem="{Binding Model.CurrentOrder}">
+        <ListBox Name="ordersListBox" Margin="10,48,419,48" ItemsSource="{Binding Database.Orders}" SelectedItem="{Binding Database.CurrentOrder}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -41,7 +41,7 @@
         <Button Content="new empty order" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" Width="109" Click="Button_Click"/>
         <Button Content="Закрыть заказ" HorizontalAlignment="Left" Margin="400,48,0,0" VerticalAlignment="Top" Height="32" Width="112" Click="Button_Click_1"/>
         <Button Content="Вернуть заказ в обработку" HorizontalAlignment="Left" Margin="525,48,0,0" VerticalAlignment="Top" Height="32" Width="176" Click="Button_Click_2"/>
-        <StackPanel Margin="400,217,45,50" DataContext="{Binding Model.CurrentOrder }">
+        <StackPanel Margin="400,217,45,50" DataContext="{Binding Database.CurrentOrder }">
             <Label Content="Сведения о заказе:" HorizontalAlignment="Center"/>
             <TextBlock TextWrapping="Wrap" Height="21" Width="352" Text="{Binding Hash}"/>
             <TextBlock TextWrapping="Wrap" Text="{Binding Name}" Height="22"/>

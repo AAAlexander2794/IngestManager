@@ -7,8 +7,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using IngestManager.Entities;
+using IngestManager.Models;
 
-namespace IngestManager.Model
+namespace IngestManager.Models
 {
     /// <summary>
     /// База данных модели.
@@ -16,7 +17,7 @@ namespace IngestManager.Model
     /// <remarks>
     /// Хранит данные, с которыми работает приложение.
     /// </remarks>
-    class Database : INotifyPropertyChanged
+    public class Database : INotifyPropertyChanged
     {
         /// <summary>
         /// Список заказов
@@ -33,6 +34,20 @@ namespace IngestManager.Model
             set
             {
                 _currentOrder = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private long _currentOperatorChatId = Config.ConfigInfo.OperatorChatId;
+        /// <summary>
+        /// Текущий оператор Инжеста
+        /// </summary>
+        public long CurrentOperatorChatId 
+        { 
+            get => _currentOperatorChatId; 
+            set 
+            { 
+                _currentOperatorChatId = value;
                 OnPropertyChanged();
             }
         }
