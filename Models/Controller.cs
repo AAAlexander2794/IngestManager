@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Telegram.Bot.Types;
@@ -36,10 +37,20 @@ namespace IngestManager.Models
             // Если пришло сообщение
             if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message && update.Message != null)
             {
+                if (update.Message.Text == null) return;
                 // Начальное приветствие
-                if (update.Message.Text != null && update.Message.Text.ToLower() == "/start")
+                if (update.Message.Text.ToLower() == "/start")
                 {
                     await TelegramBot.SendMessageAsync(update.Message.Chat.Id, "Вы подключены к боту Инжеста.");
+                    return;
+                }
+                else if (Regex.Replace(update.Message.Text.ToLower(), @"\s+", "") == "яоператор")
+                {
+                    var operatorId = update.Message.Chat.Id;
+                    Database.CurrentOperatorChatId = operatorId;
+                    Config.ConfigInfo.OperatorChatId = operatorId;
+                    Config.SaveConfig();
+                    await TelegramBot.SendMessageAsync(update.Message.Chat.Id, "Сегодня вы оператор Инжеста.");
                     return;
                 }
                 //

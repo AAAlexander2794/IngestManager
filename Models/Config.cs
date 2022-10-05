@@ -59,6 +59,11 @@ internal static class Config
         }
     }
 
+    public static void SaveConfig()
+    {
+        WriteConfig(ConfigInfo, FileName);
+    }
+
     /// <summary>
     /// Записывает в файл конфиг текущую конфигурацию
     /// </summary>
