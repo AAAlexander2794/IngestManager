@@ -14,13 +14,23 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace IngestManager.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Класс с основной логикой. Класс обращается к <see cref="Config"/> и <see cref="TelegramBot"/>, 
+    /// содержит <see cref="Models.Database"/>, <see cref="FileWatcher"/>.
+    /// </remarks>
     public class Controller
     {
         Database Database { get; }
 
+        FileWatcher FileWatcher { get; }
+
         public Controller(Database database)
         {
             Database = database;
+            FileWatcher = new FileWatcher(Config.ConfigInfo.FileWatcherCatalogPath);
             TelegramBot.OnUpdate += ProccessUpdate;
         }
 

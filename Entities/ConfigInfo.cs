@@ -26,5 +26,15 @@ namespace IngestManager.Entities
         /// </summary>
         public long OperatorChatId { get; set; } = 12345;
 
+        /// <summary>
+        /// Каталог, в котором <see cref="Models.FileWatcher"/> будет мониторить файлы на предмет изменений
+        /// </summary>
+        public string FileWatcherCatalogPath { get; set; } = "C:\\Temp";
+
+        /// <summary>
+        /// Путь к файлу логов <see cref="Models.FileWatcher"/>
+        /// </summary>
+        public string FileWatcherLogFilePath { get; set; } = "C:\\file_log.txt";
+
     }
 }

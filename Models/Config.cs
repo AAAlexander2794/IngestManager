@@ -24,7 +24,7 @@ internal static class Config
     /// <summary>
     /// Название файла конфигурации
     /// </summary>
-    static string FileName { get; } = "TelegramConfig.xml";
+    static string FileName { get; } = "Config.xml";
 
     /// <summary>
     /// Читает файл конфигурации, если возникает ошибка, пересоздает новый, сообщает, закрывает программу.

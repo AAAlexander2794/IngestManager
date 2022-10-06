@@ -85,6 +85,9 @@ internal static class TelegramBot
     /// </summary>
     /// <param name="callbackQueryId"></param>
     /// <returns></returns>
+    /// <remarks>
+    /// Его нужно отправлять, чтобы Телеграм получил сообщение о том, что запрос обработан.
+    /// </remarks>
     public static async Task AnswerCallbackQueryAsync(string callbackQueryId)
     {
         // Отвечаю на запрос, вызванный нажатием кнопки (иначе на кнопке висели бы часики как на неотправленном сообщении)
