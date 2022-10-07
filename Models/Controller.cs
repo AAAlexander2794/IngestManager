@@ -31,7 +31,8 @@ namespace IngestManager.Models
         {
             Database = database;
             FileWatcher = new FileWatcher(Config.ConfigInfo.FileWatcherCatalogPath);
-            TelegramBot.OnUpdate += ProccessUpdate;
+            TelegramBot.UpdateRecieved += ProccessUpdate;
+            FileWatcher.FileCreated += SendMessageFileCreated;
         }
 
         /// <summary>
@@ -165,6 +166,12 @@ namespace IngestManager.Models
                 proccessingButton, completeButton
             };
             return buttons;
+        }
+
+        static async Task SendMessageFileCreated(string filename)
+        {
+            string text = $"Создан файл в {Config.ConfigInfo.FileWatcherCatalogPath}:\n{filename}";
+            await TelegramBot.SendMessageToAdminAsync(text);
         }
 
     }

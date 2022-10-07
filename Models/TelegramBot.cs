@@ -28,7 +28,7 @@ internal static class TelegramBot
     static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
     public delegate Task EventHandler(object? sender, TelegramEventArgs args);
-    public static event EventHandler? OnUpdate;
+    public static event EventHandler? UpdateRecieved;
 
     /// <summary>
     /// Запускает бота
@@ -51,7 +51,7 @@ internal static class TelegramBot
     public static Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         // Объект не отправляем, так как sender не экземпляр - он статический
-        OnUpdate?.Invoke(null, new TelegramEventArgs(update));
+        UpdateRecieved?.Invoke(null, new TelegramEventArgs(update));
         return Task.CompletedTask;
     }
 
