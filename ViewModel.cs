@@ -26,17 +26,6 @@ namespace IngestManager
             // Создаем основные сущности
             Database = new Database();
             Controller = new Controller(Database);
-            //
-            try
-            {
-                TelegramBot.StartBot();
-                //Controller.SendOrderToOperatorAsync(new Order());
-            }
-            catch
-            {
-                MessageBox.Show("Не удалось подключиться к боту. Программа закроется");
-                Environment.Exit(0);
-            }
         }
 
         

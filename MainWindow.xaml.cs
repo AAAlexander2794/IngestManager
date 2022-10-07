@@ -34,6 +34,7 @@ namespace IngestManager
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.CreateEmptyOrder();
+            //OrdersDataGrid.Items.Refresh();
             //await ViewModel.Message();
         }
 

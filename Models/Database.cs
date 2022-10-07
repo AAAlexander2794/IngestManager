@@ -53,6 +53,17 @@ namespace IngestManager.Models
         }
 
         /// <summary>
+        /// Словарь для списка еще не выполненных заказов с короткой нумерацией для того, чтобы оператор мог выбрать,
+        /// к какому заказу относится загруженны файл.
+        /// </summary>
+        public Dictionary<int, Order?> CurrentOrdersAndMessageIds { get; set; } = new Dictionary<int, Order?>();
+
+        /// <summary>
+        /// Текущий файл, который был загружен в директорию
+        /// </summary>
+        public string? CurrentFilename { get; set; }
+
+        /// <summary>
         /// Добавляет заказ (<see cref="Order"/>) в заказы (<see cref="Orders"/>).
         /// </summary>
         /// <param name="order"></param>

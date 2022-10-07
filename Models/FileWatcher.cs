@@ -40,7 +40,7 @@ namespace IngestManager.Models
         /// </summary>
         public event FileCreatedHandler? FileCreated;
 
-        public FileWatcher(string catalogPath, string? logFilePath)
+        public FileWatcher(string catalogPath, string? logFilePath = null)
         {
             DirectoryPath = catalogPath;
             LogFilePath = logFilePath;
