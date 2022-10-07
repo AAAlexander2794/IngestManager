@@ -82,22 +82,11 @@ namespace IngestManager.Models
         /// <returns></returns>
         public async Task<Message> SendOrderToOperatorAsync(Order order)
         {
-            // Создаем кнопки
-            InlineKeyboardButton proccessingButton = new InlineKeyboardButton("В обработке");
-            proccessingButton.CallbackData = "Operator.Proccessing";
-            InlineKeyboardButton completeButton = new InlineKeyboardButton("Выполнен");
-            completeButton.CallbackData = "Operator.Complete";
+            
             //
-            InlineKeyboardButton[] buttons = new InlineKeyboardButton[]
-            {
-                proccessingButton, completeButton
-            };
+            var text = CreateMessageText(order);
             //
-            var text = $"Заказ \"{order.Name}\" от {order.ClientName}.\n" +
-                "Описанние заказа:\n" + 
-                $"{order.Description}";
-            //
-            var message = await TelegramBot.SendMessageAsync(Database.CurrentOperatorChatId, text, buttons);
+            var message = await TelegramBot.SendMessageAsync(Database.CurrentOperatorChatId, text, CreateOrderButtons());
             return message;
         }
 
@@ -139,17 +128,44 @@ namespace IngestManager.Models
             {
                 order.Status = OrderStatus.Обрабатывается;
                 await TelegramBot.SendMessageAsync(order.ClientChatId, "Заказ в обработке.");
+                var text = CreateMessageText(order);
+                await TelegramBot.EditMessageAsync(order.ClientChatId, order.OperatorMessageId, text, CreateOrderButtons());
             }
             else if (update.CallbackQuery.Data.ToLower() == "operator.complete")
             {
                 order.Status = OrderStatus.Выполнен;
                 await TelegramBot.SendMessageAsync(order.ClientChatId, "Заказ в выполнен.");
+                var text = CreateMessageText(order);
+                await TelegramBot.EditMessageAsync(order.ClientChatId, order.OperatorMessageId, text, CreateOrderButtons());
             }
             //await TelegramBot.SendMessageAsync(Config.ConfigInfo.AdminChatId, "Нажата кнопка: " + update.CallbackQuery.Data.ToString());
             // Отвечаю на запрос, вызванный нажатием кнопки (иначе на кнопке висели бы часики как на неотправленном сообщении)
             await TelegramBot.AnswerCallbackQueryAsync(update.CallbackQuery.Id);
         }
 
+        static string CreateMessageText(Order order)
+        {
+            string text = $"Заказ \"{order.Name}\" от {order.ClientName}.\n" +
+                $"Статус заказа: {order.Status}.\n" +
+                "Описанние заказа:\n" +
+                $"{order.Description}";
+            return text;
+        }
+
+        static InlineKeyboardButton[] CreateOrderButtons()
+        {
+            // Создаем кнопки
+            InlineKeyboardButton proccessingButton = new InlineKeyboardButton("В обработке");
+            proccessingButton.CallbackData = "Operator.Proccessing";
+            InlineKeyboardButton completeButton = new InlineKeyboardButton("Выполнен");
+            completeButton.CallbackData = "Operator.Complete";
+            //
+            InlineKeyboardButton[] buttons = new InlineKeyboardButton[]
+            {
+                proccessingButton, completeButton
+            };
+            return buttons;
+        }
 
     }
 }

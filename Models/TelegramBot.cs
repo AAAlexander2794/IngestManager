@@ -101,11 +101,23 @@ internal static class TelegramBot
     /// <param name="exception"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+    private static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
         // Некоторые действия
         Debug.WriteLine("Ошибка в Телеграм боте");
     }
 
-    
+    public static async Task EditMessageAsync(long chatId, int messageId, string text)
+    {
+        await Bot.EditMessageTextAsync(chatId, messageId, text);
+    }
+
+    public static async Task EditMessageAsync(long chatId, int messageId, string text, InlineKeyboardButton[] buttons)
+    {
+        InlineKeyboardMarkup inline = new InlineKeyboardMarkup(buttons);
+        await Bot.EditMessageTextAsync(chatId, messageId, text, 
+            replyMarkup: inline,
+            cancellationToken: CancellationTokenSource.Token);
+    }
+
 }

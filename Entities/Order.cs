@@ -42,12 +42,12 @@ namespace IngestManager.Entities
         /// <summary>
         /// Id сообщения от клиента, в котором была отправлена информация о заказе
         /// </summary>
-        public long ClientMessageId { get; set; }
+        public int ClientMessageId { get; set; }
 
         /// <summary>
         /// Id сообщения у оператора, в котором была отправлена информация о заказе
         /// </summary>
-        public long OperatorMessageId { get; set; }
+        public int OperatorMessageId { get; set; }
 
         /// <summary>
         /// Дополнительное описание от клиента, если требуются пояснения по заказу
