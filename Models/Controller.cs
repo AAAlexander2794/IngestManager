@@ -33,7 +33,8 @@ namespace IngestManager.Models
             Database = database;
             FileWatcher = new FileWatcher(Config.ConfigInfo.FileWatcherCatalogPath);
             TelegramBot.UpdateRecieved += ProccessUpdate;
-            FileWatcher.FileCreated += SendMessageFileCreated;
+            FileWatcher.FileCreated += AddFilenameToQueue;
+            
             try
             {
                 TelegramBot.StartBot();
@@ -79,12 +80,12 @@ namespace IngestManager.Models
                     try
                     {
                         var key = int.Parse(update.Message.Text);
-                        var order = Database.CurrentOrdersAndMessageIds[key];
+                        var order = Database.OpenOrders[key];
                         order.FilePath = Database.CurrentFilename;
                         await TelegramBot.SendMessageAsync(order.ClientChatId, $"По вашему заказу загружен файл:\n{order.FilePath}.");
                         order.Status = OrderStatus.Выполнен;
                         await TelegramBot.SendMessageAsync(Config.ConfigInfo.OperatorChatId, $"Выполнен заказ:\n{CreateMessageText(order)}");
-                        Database.CurrentOrdersAndMessageIds.Clear();
+                        Database.OpenOrders.Clear();
                     }
                     catch { }
                 }
@@ -198,26 +199,28 @@ namespace IngestManager.Models
         async Task SendMessageFileCreated(string filename)
         {
             Database.CurrentFilename = filename;
-            var ordersInProgress = Database.Orders.Where(x => x.Status != OrderStatus.Выполнен).ToList();
-            if (ordersInProgress.Count == 0)
+            var openOrders = Database.RefreshCurrentOpenOrders();
+            if (openOrders.Count == 0)
             {
                 await TelegramBot.SendMessageAsync(Config.ConfigInfo.OperatorChatId, 
                     $"Создан файл {Config.ConfigInfo.FileWatcherCatalogPath}{filename}, " +
                     "однако нет активных заказов.");
                 return;
             }
-            Database.CurrentOrdersAndMessageIds.Clear();
             string text = $"Создан файл {Config.ConfigInfo.FileWatcherCatalogPath}{filename}.\n" + 
                 "Выберите, к какому из заказов относится файл:\n\n";
-            //InlineKeyboardButton[] buttons = new InlineKeyboardButton[ordersInProgress.Count];
-            for (int i = 0; i < ordersInProgress.Count; i++ )
+            for (int i = 0; i < openOrders.Count; i++ )
             {
-                text = text + $"{i+1}) {CreateMessageText(ordersInProgress[i])}\n";
-                Database.CurrentOrdersAndMessageIds.Add(i + 1, ordersInProgress[i]);
-                //buttons[i] = new InlineKeyboardButton($"{i+1}");
-                //buttons[i].CallbackData = $"Order.{i}";
+                /// Ключи в <see cref="Database.OpenOrders"/> начинаются с 1
+                text = text + $"{i+1}) {CreateMessageText(openOrders[i])}\n";
             }
             await TelegramBot.SendMessageAsync(Config.ConfigInfo.OperatorChatId, text);
+        }
+
+        private Task AddFilenameToQueue(string filename)
+        {
+            Database.Filenames.Add(filename);
+            return Task.CompletedTask;
         }
 
     }
