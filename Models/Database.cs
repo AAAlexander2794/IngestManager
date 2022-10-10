@@ -53,21 +53,7 @@ namespace IngestManager.Models
             }
         }
 
-        /// <summary>
-        /// Открытые заказы с короткой нумерацией для того, чтобы оператор мог выбрать,
-        /// к какому заказу относится загруженны файл.
-        /// </summary>
-        public Dictionary<int, Order> OpenOrders { get; set; } = new Dictionary<int, Order>();
-
-        /// <summary>
-        /// Текущий файл, который был загружен в директорию
-        /// </summary>
-        public string? CurrentFilename { get; set; }
-
-        /// <summary>
-        /// Имена файлов, загруженные в папку, за которой смотрит <see cref="FileWatcher"/>
-        /// </summary>
-        public ObservableCollection<string> Filenames { get; } = new ObservableCollection<string>();
+        
 
         /// <summary>
         /// Добавляет заказ (<see cref="Order"/>) в заказы (<see cref="Orders"/>).
@@ -85,20 +71,7 @@ namespace IngestManager.Models
             });
         }
 
-        /// <summary>
-        /// Обновляет список открытых заказов из <see cref="Orders"/>
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<int, Order> RefreshCurrentOpenOrders()
-        {
-            OpenOrders.Clear();
-            int i = 1;
-            foreach (Order order in Orders.Where(x => x.Status != OrderStatus.Выполнен))
-            {
-                OpenOrders[i++] = order;
-            }
-            return OpenOrders;
-        }
+        
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
