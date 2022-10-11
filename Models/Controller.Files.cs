@@ -123,7 +123,7 @@ namespace IngestManager.Models
             if (openOrders.Count == 0)
             {
                 await TelegramBot.SendMessageAsync(Config.ConfigInfo.OperatorChatId,
-                    $"Создан файл {Config.ConfigInfo.FileWatcherCatalogPath}{Files_CurrentFilename}, " +
+                    $"Создан файл {Config.ConfigInfo.FileWatcherCatalogPath}\\{Files_CurrentFilename}, " +
                     "однако нет активных заказов.");
                 return;
             }

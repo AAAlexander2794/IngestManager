@@ -3,6 +3,7 @@ using IngestManager.Models;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -32,7 +33,7 @@ namespace IngestManager.Models
         {
             Database = database;
             FileWatcher = new FileWatcher(Config.ConfigInfo.FileWatcherCatalogPath);
-            TelegramBot.UpdateRecieved += ProccessUpdate;
+            TelegramBot.UpdateRecieved += ProccessUpdateAsync;
             //
             Files_SetEvents();            
             //
@@ -55,7 +56,7 @@ namespace IngestManager.Models
         /// <param name="sender"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        async Task ProccessUpdate(object? sender, TelegramEventArgs args)
+        async Task ProccessUpdateAsync(object? sender, TelegramEventArgs args)
         {
             if (args == null) return;
             var update = args.Update;
@@ -69,6 +70,31 @@ namespace IngestManager.Models
                     await TelegramBot.SendMessageAsync(update.Message.Chat.Id, "Вы подключены к боту Инжеста.");
                     return;
                 }
+                // Если сообщение написал админ (эта проверка раньше проверки на оператора) + другие проверки
+                else if (update.Message.From?.Id == Config.ConfigInfo.AdminChatId &&
+                    Regex.Replace(update.Message.Text.ToLower(), @"\s+", "") == "файл")
+                {
+                    var i = 0;
+                    while (true)
+                    {
+                        var filepath = $"{Config.ConfigInfo.FileWatcherCatalogPath}\\file{i}.txt";
+                        // Если файл с таким названием существует
+                        if (System.IO.File.Exists(filepath))
+                        {
+                            i++;
+                        }
+                        else
+                        {
+                            // Просто файл создать
+                            FileStream fs = new FileStream(filepath, FileMode.CreateNew);
+                            //fs.FlushAsync().Wait();
+                            await fs.DisposeAsync();
+                            break;
+                        }
+                    }
+
+                }
+                // Пришло сообщение с командой стать оператором
                 else if (Regex.Replace(update.Message.Text.ToLower(), @"\s+", "") == "яоператор")
                 {
                     var operatorId = update.Message.Chat.Id;
@@ -79,7 +105,7 @@ namespace IngestManager.Models
                     return;
                 }
                 // Если сообщение пришло от оператора
-                else if (update.Message.From.Id == Database.CurrentOperatorChatId)
+                else if (update.Message.From?.Id == Database.CurrentOperatorChatId)
                 {
                     try
                     {
@@ -88,7 +114,7 @@ namespace IngestManager.Models
                     }
                     catch { }
                 }
-                //
+                // Если ничего из вышеперечисленного, то это просто клиент и он хочет сделать заказ
                 else
                 {
                     //
@@ -98,7 +124,7 @@ namespace IngestManager.Models
                 }
             }
             // Если пришло нажатие кнопки
-            if (update.Type == UpdateType.CallbackQuery && update.CallbackQuery != null)
+            else if (update.Type == UpdateType.CallbackQuery && update.CallbackQuery != null)
             {
                 await ProccessOrder(update);
             }

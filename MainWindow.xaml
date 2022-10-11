@@ -40,6 +40,7 @@
                 
             </DataGrid.Columns>
         </DataGrid>
+        <DataGrid ItemsSource="{Binding Database.FilenamesQueue}" Margin="10,246,470,21"/>
 
     </Grid>
 </Window>
