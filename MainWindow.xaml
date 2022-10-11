@@ -32,10 +32,14 @@
         <Button Content="new empty order" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" Width="109" Click="Button_Click"/>
 
         <TextBlock Name="Footer" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
-        <DataGrid Name="OrdersDataGrid"  IsReadOnly="True" SelectionMode="Single" Margin="0,47,0,21" 
+        <DataGrid Name="OrdersDataGrid"  IsReadOnly="True" SelectionMode="Single" Margin="10,47,10,183" 
                    ItemsSource="{Binding Database.Orders}" SelectedItem="{Binding Database.CurrentOrder}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="349,18,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="441"
-                   Text="{Binding Database.CurrentOrder.FilePath}"/>
+        <DataGrid ItemsSource="{Binding Database.CurrentOrder.Filenames}" Margin="335,246,10,16">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding}"/>
+                
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 </Window>

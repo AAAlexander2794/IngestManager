@@ -33,9 +33,9 @@ namespace IngestManager.Models
             Database = database;
             FileWatcher = new FileWatcher(Config.ConfigInfo.FileWatcherCatalogPath);
             TelegramBot.UpdateRecieved += ProccessUpdate;
-            FileWatcher.FileCreated += Files_AddFilenameToQueue;
-            
-            
+            //
+            Files_SetEvents();            
+            //
             try
             {
                 TelegramBot.StartBot();
@@ -78,22 +78,17 @@ namespace IngestManager.Models
                     await TelegramBot.SendMessageAsync(update.Message.Chat.Id, "Сегодня вы оператор Инжеста.");
                     return;
                 }
+                // Если сообщение пришло от оператора
                 else if (update.Message.From.Id == Database.CurrentOperatorChatId)
                 {
                     try
                     {
-                        var key = int.Parse(update.Message.Text);
-                        var order = Database.OpenOrders[key];
-                        order.FilePath = Database.CurrentFilename;
-                        await TelegramBot.SendMessageAsync(order.ClientChatId, $"По вашему заказу загружен файл:\n{order.FilePath}.");
-                        //order.Status = OrderStatus.Выполнен;
-                        await TelegramBot.SendMessageAsync(Config.ConfigInfo.OperatorChatId, $"Выполнен заказ:\n{CreateMessageText(order)}");
-                        Database.OpenOrders.Clear();
-                        Database.FilenamesQueue.Remove(Database.CurrentFilename);
-                        //Database.CurrentFilename = null;
+                        // Обрабатываем сообщение как определение принадлежности файла заказу
+                        await Files_ProcessMessageAsync(update.Message.Text);
                     }
                     catch { }
                 }
+                //
                 else
                 {
                     //

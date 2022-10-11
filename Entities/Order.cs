@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using IngestManager.Models;
 
 namespace IngestManager.Entities
@@ -80,7 +82,10 @@ namespace IngestManager.Entities
         /// </summary>
         public DateTime? Completed { get; set; }
 
-        public string? FileName { get; set; }
+        /// <summary>
+        /// Коллекция имен файлов в определенной папке, которые относятся к данному заказу.
+        /// </summary>
+        public ObservableCollection<string> Filenames { get; set; } = new ObservableCollection<string>();
 
         public string? FilePath { get; set; }
 
@@ -115,6 +120,14 @@ namespace IngestManager.Entities
             Description = description;
             Status = OrderStatus.Получен;
             Created = DateTime.Now;
+        }
+
+        public void AddFilename(string filename)
+        {
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(delegate ()
+            {
+                Filenames.Add(filename);
+            });
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

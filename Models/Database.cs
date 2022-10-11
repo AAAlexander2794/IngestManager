@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using IngestManager.Entities;
 using IngestManager.Models;
 using Telegram.Bot.Types;
@@ -53,7 +54,15 @@ namespace IngestManager.Models
             }
         }
 
-        
+        /// <summary>
+        /// Очередь имен файлов, загруженные в папку, за которой смотрит <see cref="FileWatcher"/>
+        /// </summary>
+        /// <remarks>
+        /// Когда в папку загружается файл, бот должен уточнить у оператора, к какому заказу файл относится,
+        /// оператор отвечает не мгновенно, к этому моменту может загрузиться в папку еще один файл, возникает очередь.
+        /// </remarks>
+        public ObservableCollection<string> FilenamesQueue { get; } = new ObservableCollection<string>();
+
 
         /// <summary>
         /// Добавляет заказ (<see cref="Order"/>) в заказы (<see cref="Orders"/>).
@@ -71,7 +80,21 @@ namespace IngestManager.Models
             });
         }
 
-        
+        public void AddFilenameToQueue(string filename)
+        {
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(delegate ()
+            {
+                FilenamesQueue.Add(filename);
+            });
+        }
+
+        public void RemoveFilenameFromQueue(string filename)
+        {
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(delegate ()
+            {
+                FilenamesQueue.Remove(filename);
+            });
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
